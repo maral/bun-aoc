@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test'
-import { parse, partOne, partTwo, range } from './05'
+import { parse, partOne, partTwo } from './05'
 
 const example = `seeds: 79 14 55 13
 
@@ -53,14 +53,6 @@ describe('Day 5', () => {
           parse(example)
         )
       ).toBe(46)
-    })
-  })
-
-  describe('utils' , () => {
-    test('range', () => {
-      expect(
-        range(0, 5)
-      ).toEqual([0, 1, 2, 3, 4, 5])
     })
   })
 })

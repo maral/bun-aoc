@@ -54,10 +54,6 @@ function getMinLocation(seeds: number[], maps: Parsed['maps']) {
   )
 }
 
-export function range(start: number, end: number) {
-  return Array.from({ length: end - start + 1 }, (_, i) => start + i)
-}
-
 export function partOne(input: ReturnType<typeof parse>) {
   return getMinLocation(input.seeds, input.maps)
 }
