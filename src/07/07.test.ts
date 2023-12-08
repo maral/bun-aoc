@@ -7,7 +7,7 @@ KK677 28
 KTJJT 220
 QQQJA 483`
 
-describe('Day 6', () => {
+describe('Day 7', () => {
   describe('Part One', () => {
     test('test input', () => {
       expect(partOne(parse(example))).toBe(6440)
@@ -43,7 +43,7 @@ KA7AA 2
       expect(partTwo(parse(input))).toBe(4 * 4 + 1 * 3 + 2 * 2 + 8 * 1)
     })
 
-    test('full J', () => {
+    test('weird Js', () => {
       const input = `9A998 1
 9A9A9 2
 TJ95J 4`
