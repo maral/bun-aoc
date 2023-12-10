@@ -18,6 +18,7 @@
   "dependencies": {
     "@types/lodash.range": "^3.2.9",
     "compute-lcm": "^1.1.2",
+    "js-sdsl": "^4.4.2",
     "lodash.range": "^3.2.0"
   }
 }
