@@ -9,16 +9,37 @@ export function parse(input: string) {
 }
 
 export function partOne(input: ReturnType<typeof parse>) {
+  const cache = new Map<string, number>()
   return input
     .map(({ springMap, sizes }) => {
-      return getNumberOfCombinations(springMap, sizes)
+      return getNumberOfCombinations(springMap, sizes, cache)
     })
     .reduce((acc, size) => {
       return acc + size
     }, 0)
 }
 
-function getNumberOfCombinations(springMap: string, sizes: number[]): number {
+function getNumberOfCombinationsCached(
+  springMap: string,
+  sizes: number[],
+  cache: Map<string, number>
+): number {
+  const cacheKey = `${springMap}-${sizes.join(',')}`
+
+  if (cache.has(cacheKey)) {
+    return cache.get(cacheKey)!
+  }
+
+  const result = getNumberOfCombinations(springMap, sizes, cache)
+  cache.set(cacheKey, result)
+  return result
+}
+
+function getNumberOfCombinations(
+  springMap: string,
+  sizes: number[],
+  cache: Map<string, number>
+): number {
   if (sizes.length === 0) {
     if (springMap.includes('#')) {
       return 0
@@ -33,7 +54,7 @@ function getNumberOfCombinations(springMap: string, sizes: number[]): number {
 
   switch (springMap[0]) {
     case '.':
-      return getNumberOfCombinations(springMap.substring(1), sizes)
+      return getNumberOfCombinationsCached(springMap.substring(1), sizes, cache)
     case '#':
       const first = springMap.substring(0, sizes[0]!)
       if (
@@ -41,17 +62,22 @@ function getNumberOfCombinations(springMap: string, sizes: number[]): number {
         (['?', '.'].includes(springMap[sizes[0]!]!) ||
           springMap.length === sizes[0]!)
       ) {
-        return getNumberOfCombinations(
+        return getNumberOfCombinationsCached(
           springMap.substring(sizes[0]! + 1),
-          sizes.slice(1)
+          sizes.slice(1),
+          cache
         )
       } else {
         return 0
       }
     case '?':
       return (
-        getNumberOfCombinations(springMap.substring(1), sizes) +
-        getNumberOfCombinations(`#${springMap.substring(1)}`, sizes)
+        getNumberOfCombinationsCached(springMap.substring(1), sizes, cache) +
+        getNumberOfCombinationsCached(
+          `#${springMap.substring(1)}`,
+          sizes,
+          cache
+        )
       )
     default:
       return 0
@@ -65,11 +91,13 @@ export function sumWithSpaces(sizes: number[]) {
 }
 
 export function partTwo(input: ReturnType<typeof parse>) {
+  const cache = new Map<string, number>()
   return input
     .map(({ springMap, sizes }) => {
-      const c = getNumberOfCombinations(
+      const c = getNumberOfCombinationsCached(
         new Array(5).fill(springMap).join('?'),
-        [...sizes, ...sizes, ...sizes, ...sizes, ...sizes]
+        [...sizes, ...sizes, ...sizes, ...sizes, ...sizes],
+        cache
       )
       return c
     })
