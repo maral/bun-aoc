@@ -23,7 +23,7 @@ export function partTwo(input: ReturnType<typeof parse>) {
     cycles++
 
     if (!isEnd) {
-      const key = fnv1a(input)
+      const key = fnv1aHash(input)
       if (cache.has(key)) {
         const cycleLength = cycles - cache.get(key)!
         const remainder = (limit - cycles) % cycleLength
@@ -55,15 +55,15 @@ export function tilt(input: ReturnType<typeof parse>, direction: Direction) {
     let freeIndex = -1
     for (let j = 0; j < tiltDirectionSize; j++) {
       const row = isVertical(direction)
-        ? direction === 'north'
-          ? j
-          : tiltDirectionSize - j - 1
+        ? isReversed(direction)
+          ? tiltDirectionSize - j - 1
+          : j
         : i
       const column = isVertical(direction)
         ? i
-        : direction === 'west'
-          ? j
-          : tiltDirectionSize - j - 1
+        : isReversed(direction)
+          ? tiltDirectionSize - j - 1
+          : j
       switch (input[row]![column]!) {
         case 'O':
           if (freeIndex !== -1) {
@@ -74,7 +74,7 @@ export function tilt(input: ReturnType<typeof parse>, direction: Direction) {
               input[row]![freeIndex] = 'O'
               input[row]![column] = '.'
             }
-            freeIndex += isReverse(direction) ? -1 : 1
+            freeIndex += isReversed(direction) ? -1 : 1
           }
           break
         case '.':
@@ -95,11 +95,11 @@ function isVertical(direction: Direction) {
   return direction === 'north' || direction === 'south'
 }
 
-function isReverse(direction: Direction) {
+function isReversed(direction: Direction) {
   return direction === 'south' || direction === 'east'
 }
 
-export function fnv1a(input: ReturnType<typeof parse>) {
+export function fnv1aHash(input: ReturnType<typeof parse>) {
   let hash = 0x811c9dc5
   for (let y = 0; y < input.length; y++) {
     for (let x = 0; x < input.length; x++) {
