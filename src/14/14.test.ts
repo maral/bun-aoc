@@ -12,13 +12,10 @@ O.#..O.#.#
 #....###..
 #OO..#....`
 
-const example2 = ``
-
 describe('Day 14', () => {
   describe('Part One', () => {
     test('test input', () => {
-      // expect(partOne(parse(example))).toBe(136)
-      
+      expect(partOne(parse(example))).toBe(136)
     })
   })
 
@@ -34,16 +31,6 @@ describe('Day 14', () => {
 
   describe('Part Two', () => {
     test('test input', () => {
-      // console.log('north')
-      // console.log(tilt(parse(example), 'north').map(row => row.join('')).join('\n') + '\n\n')
-      // console.log(example)
-      // console.log('west')
-      // console.log(tilt(parse(example), 'west').map(row => row.join('')).join('\n') + '\n\n')
-      // console.log('south')
-      // console.log(tilt(parse(example), 'south').map(row => row.join('')).join('\n') + '\n\n')
-      // console.log('east')
-      // console.log(tilt(parse(example), 'east').map(row => row.join('')).join('\n') + '\n\n')
-      // expect(400).toBe(400)
       expect(partTwo(parse(example))).toBe(64)
     })
   })
