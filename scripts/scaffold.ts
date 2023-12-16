@@ -8,21 +8,32 @@ import { fetchInput } from './api.ts'
 export async function scaffold(day: number, year: number) {
   const name = `${day}`.padStart(2, '0')
 
-  const directory = new URL(`../src/${name}/`, import.meta.url)
+  const directory = new URL(`../src/${year}/${name}/`, import.meta.url)
 
   if (existsSync(directory)) return
 
   console.log(`📂 Setting up day ${day} of ${year}`)
 
-  await mkdir(directory)
+  await mkdir(directory, { recursive: true })
 
   const test = dedent`
-  import { describe } from 'bun:test'
+  import { describe, expect, test } from 'bun:test'
+  import { parse, partOne, partTwo } from './${name}'
+
+  const { default: example } = await import('./input.txt')
 
   describe(${`'Day ${day}'`}, () => {
-    describe('Part One', () => {})
+    describe('Part One', () => {
+      test('test input', () => {
+        expect(partOne(parse(example))).toBe(0)
+      })
+    })
     
-    describe('Part Two', () => {})
+    describe('Part Two', () => {
+      test('test input', () => {
+        expect(partTwo(parse(example))).toBe(0)
+      })
+    })
   })
   `
 

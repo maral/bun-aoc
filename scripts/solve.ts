@@ -4,7 +4,7 @@ import { formatPerformance, withPerformance, isBetween } from './utils.ts'
 import { scaffold } from './scaffold.ts'
 
 const day = parseInt(argv[2] ?? '')
-const year = parseInt(process.env.YEAR ?? new Date().getFullYear())
+const year = parseInt(argv[3] ?? process.env.YEAR ?? new Date().getFullYear())
 
 if (!isBetween(day, [1, 25])) {
   console.log(`🎅 Pick a day between ${chalk.bold(1)} and ${chalk.bold(25)}.`)
@@ -16,11 +16,12 @@ await scaffold(day, year)
 
 const name = `${day}`.padStart(2, '0')
 
-const { default: input } = await import(`@/${name}/input.txt`)
-const { partOne, partTwo, parse } = await import(`@/${name}/${name}.ts`)
+const { default: input } = await import(`@/${year}/${name}/input.txt`)
+const { partOne, partTwo, parse } = await import(`@/${year}/${name}/${name}.ts`)
+const sanitizedInput = input.trim('\n')
 
-const [one, onePerformance] = withPerformance(() => partOne?.(parse(input)))
-const [two, twoPerformance] = withPerformance(() => partTwo?.(parse(input)))
+const [one, onePerformance] = withPerformance(() => partOne?.(parse(sanitizedInput)))
+const [two, twoPerformance] = withPerformance(() => partTwo?.(parse(sanitizedInput)))
 
 console.log(
   '🌲',
