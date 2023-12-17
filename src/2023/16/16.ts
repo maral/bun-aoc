@@ -51,26 +51,27 @@ const movementMap: Record<Direction, Record<MapSymbol, Direction[]>> = {
 const directions: Direction[] = ['up', 'down', 'left', 'right']
 
 export function partOne(input: ReturnType<typeof parse>) {
-  const visited = new Set<string>()
-  return getEnergized(input, 0, 0, 'right', visited)
+  return getEnergized(input, 0, 0, 'right')
 }
 
 export function partTwo(input: ReturnType<typeof parse>) {
-  const visited = new Set<string>()
   let nonEmpty = 0
-  const options = range(input.length)
-    .map(y =>
-      range(input[y]!.length).map(x =>
-        directions.map(direction => [x, y, direction] as const)
-      )
-    )
+  const vertical = range(input.length)
+    .map(y => [
+      [0, y, 'right'] as const,
+      [input[y]!.length - 1, y, 'left'] as const
+    ])
     .flat()
+  const horizontal = range(input[0]!.length)
+    .map(x => [
+      [x, 0, 'down'] as const,
+      [x, input[0]!.length - 1, 'up'] as const
+    ])
     .flat()
-  const shuffled = shuffle(options)
 
   return Math.max(
-    ...shuffled.map(([x, y, direction]) => {
-      const energy = getEnergized(input, x, y, direction, visited)
+    ...[...vertical, ...horizontal].map(([x, y, direction]) => {
+      const energy = getEnergized(input, x, y, direction)
       if (energy > 0) {
         nonEmpty++
       }
@@ -83,25 +84,12 @@ function getEnergized(
   input: ReturnType<typeof parse>,
   x: number,
   y: number,
-  direction: Direction,
-  historicallyVisited: Set<string>
+  direction: Direction
 ) {
   const stack = new Stack<[number, number, Direction]>()
   const visited = new Set<string>()
   const visitedFields = new Set<string>()
-  if (historicallyVisited.has(getKey(x, y, direction))) {
-    return 0
-  }
-  pushToStack(
-    input,
-    stack,
-    visited,
-    visitedFields,
-    historicallyVisited,
-    x,
-    y,
-    direction
-  )
+  pushToStack(input, stack, visited, visitedFields, x, y, direction)
 
   while (stack.length > 0) {
     const [x, y, direction] = stack.pop()!
@@ -113,7 +101,6 @@ function getEnergized(
         stack,
         visited,
         visitedFields,
-        historicallyVisited,
         x + dx,
         y + dy,
         newDirection
@@ -128,7 +115,6 @@ function pushToStack(
   stack: Stack<[number, number, Direction]>,
   visited: Set<string>,
   visitedFields: Set<string>,
-  historicallyVisited: Set<string>,
   x: number,
   y: number,
   direction: Direction
@@ -144,7 +130,6 @@ function pushToStack(
   ) {
     stack.push([x, y, direction])
     visited.add(key)
-    historicallyVisited.add(key)
     visitedFields.add(fieldKey)
   }
 }
