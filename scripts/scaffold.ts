@@ -20,7 +20,7 @@ export async function scaffold(day: number, year: number) {
   import { describe, expect, test } from 'bun:test'
   import { parse, partOne, partTwo } from './${name}'
 
-  const { default: example } = await import('./input.txt')
+  const { default: example } = await import('./example.txt')
 
   describe(${`'Day ${day}'`}, () => {
     describe('Part One', () => {
