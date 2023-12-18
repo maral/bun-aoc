@@ -87,8 +87,6 @@ export function findShortestPath(
         pathList += `x: ${backtracked.x}  y: ${backtracked.y}, ${backtracked.direction} - ${backtracked.straightLineLength}\n`
         backtracked = backtracked.from
       }
-      console.log(pathMap.map(line => line.join('')).join('\n'))
-      console.log(pathList)
       return current.distance
     }
 
@@ -98,9 +96,9 @@ export function findShortestPath(
     }
 
     for (const offset of offsets) {
-      // if (offset.direction === getOppositeDirection(current.direction)) {
-      //   continue
-      // }
+      if (offset.direction === getOppositeDirection(current.direction)) {
+        continue
+      }
 
       if (
         offset.direction !== current.direction &&
