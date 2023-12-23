@@ -77,7 +77,7 @@ function fallDown(bricks: Brick[]) {
   layers.set(1, [])
   let highestLayer = 1
   bricks.forEach(brick => {
-    let layer = highestLayer
+    let layer = Math.min(highestLayer, brick.from.z - 1)
     while (layer > 0) {
       if (!layers.has(layer)) {
         layer--
