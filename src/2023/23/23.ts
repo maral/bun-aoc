@@ -42,8 +42,8 @@ type FieldState = {
 }
 
 type Graph = {
-  vertices: Set<string>
-  edges: Map<string, [string, number][]>
+  edges: Map<number, [number, number][]>
+  vertexMap: Map<string, number>
 }
 
 export function parse(input: string) {
@@ -52,19 +52,17 @@ export function parse(input: string) {
 
 export function partOne(map: ReturnType<typeof parse>) {
   const graph = getGraph(map)
-  // console.log(graph.edges)
-  // console.log(graph.vertices.size, graph.edges.size)
-  const start = getVertexKey(getStart())
-  const goal = getVertexKey(getGoal(map))
+  const start = getVertexNumber(getVertexKey(getStart()), graph.vertexMap)
+  const goal = getVertexNumber(getVertexKey(getGoal(map)), graph.vertexMap)
   return findLongestPath(graph, start, goal)
 }
 
 export function partTwo(map: ReturnType<typeof parse>) {
   const graph = getGraph(map, true)
-  const start = getVertexKey(getStart())
-  const goal = getVertexKey(getGoal(map))
-
-  return findLongestPath(graph, start, goal)
+  const start = getVertexNumber(getVertexKey(getStart()), graph.vertexMap)
+  const goal = getVertexNumber(getVertexKey(getGoal(map)), graph.vertexMap)
+  const result = findLongestPath(graph, start, goal)
+  return result
 }
 
 function getStart(): Vertex {
@@ -77,27 +75,49 @@ function getGoal(map: ReturnType<typeof parse>): Vertex {
 
 function findLongestPath(
   graph: Graph,
-  from: string,
-  goal: string,
-  visited: Set<string> = new Set([from]),
-  traveled = 0
+  from: number,
+  goal: number,
+  visited: bigint = setBit(0n, from),
+  traveled = 0,
+  cache = new Map<bigint, [number, number | null]>()
 ): number | null {
+  if (cache.has(visited)) {
+    const cached = cache.get(visited)!
+    if (cached[0] >= traveled) {
+      return cached[1]
+    }
+  }
   const edges = graph.edges.get(from) || []
   const paths = edges
     .map(([to, length]) => {
-      if (visited.has(to)) {
+      if (isBitSet(visited, to)) {
         return null
       }
       if (to === goal) {
         return length + traveled
       }
-      const newVisited = new Set(visited)
-      newVisited.add(to)
-      return findLongestPath(graph, to, goal, newVisited, traveled + length)
+      return findLongestPath(
+        graph,
+        to,
+        goal,
+        setBit(visited, to),
+        traveled + length,
+        cache
+      )
     })
     .filter(path => path !== null) as number[]
 
-  return paths.length > 0 ? Math.max(...paths) : null
+  const result = paths.length > 0 ? Math.max(...paths) : null
+  cache.set(visited, [traveled, result])
+  return result
+}
+
+function setBit(value: bigint, bit: number) {
+  return value | (1n << BigInt(bit))
+}
+
+function isBitSet(value: bigint, bit: number) {
+  return (value & (1n << BigInt(bit))) !== 0n
 }
 
 export function getGraph(map: ReturnType<typeof parse>, twoWay = false) {
@@ -159,7 +179,24 @@ export function getGraph(map: ReturnType<typeof parse>, twoWay = false) {
     })
   }
 
-  return { vertices, edges }
+  return renameGraph(vertices, edges)
+}
+
+function renameGraph(
+  vertices: Set<string>,
+  edges: Map<string, [string, number][]>
+): Graph {
+  const vertexMap = new Map<string, number>()
+  const newEdges = new Map<number, [number, number][]>()
+  Array.from(edges.keys()).forEach(vertex => {
+    const list = edges.get(vertex) || []
+    newEdges.set(
+      getVertexNumber(vertex, vertexMap),
+      list.map(([to, length]) => [getVertexNumber(to, vertexMap), length])
+    )
+  })
+
+  return { edges: newEdges, vertexMap }
 }
 
 function addEdge(
@@ -201,6 +238,9 @@ function getVertexKey(vertex: Vertex) {
   return `${vertex.x},${vertex.y}`
 }
 
-function getEdgeKey(from: string, to: string, visited: Set<string>) {
-  return [from, to].sort().join(';') + '-' + [...visited].sort().join(';')
+function getVertexNumber(vertex: string, vertexMap: Map<string, number>) {
+  if (!vertexMap.has(vertex)) {
+    vertexMap.set(vertex, vertexMap.size)
+  }
+  return vertexMap.get(vertex)!
 }
