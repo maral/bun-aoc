@@ -18,10 +18,14 @@ const name = `${day}`.padStart(2, '0')
 
 const { default: input } = await import(`@/${year}/${name}/input.txt`)
 const { partOne, partTwo, parse } = await import(`@/${year}/${name}/${name}.ts`)
-const sanitizedInput = input.trim('\n')
+const sanitizedInput = input?.trim('\n') ?? ''
 
-const [one, onePerformance] = withPerformance(() => partOne?.(parse(sanitizedInput)))
-const [two, twoPerformance] = withPerformance(() => partTwo?.(parse(sanitizedInput)))
+const [one, onePerformance] = withPerformance(
+  () => partOne?.(parse(sanitizedInput))
+)
+const [two, twoPerformance] = withPerformance(
+  () => partTwo?.(parse(sanitizedInput))
+)
 
 console.log(
   '🌲',
