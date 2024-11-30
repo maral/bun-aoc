@@ -19,8 +19,6 @@ export function parse(input: string) {
     bags[parentColor!] = childBags
   })
 
-  console.log(bags)
-
   return bags
 }
 

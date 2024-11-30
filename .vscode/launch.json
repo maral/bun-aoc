@@ -8,10 +8,11 @@
       "type": "bun",
       "internalConsoleOptions": "neverOpen",
       "request": "launch",
-      "name": "Debug File",
-      "program": "${file}",
+      "name": "Debug solve script",
+      "program": "${workspaceFolder}/scripts/solve.ts",
+      "args": ["${fileBasenameNoExtension}"],
       "cwd": "${workspaceFolder}",
-      "stopOnEntry": false,
+      "stopOnEntry": true,
       "watchMode": false
     },
     {

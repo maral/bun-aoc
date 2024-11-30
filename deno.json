@@ -1,0 +1,12 @@
+{
+  "tasks": {
+    "solve": "deno run --allow-env --allow-read --allow-write --allow-net --watch ./scripts/solve.ts"
+  },
+  "imports": {
+    "chalk": "npm:chalk@^5.3.0",
+    "prettier": "npm:prettier@^3.4.1"
+  },
+  "compilerOptions": {
+    "strict": true
+  }
+}

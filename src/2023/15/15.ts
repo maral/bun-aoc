@@ -1,4 +1,5 @@
-import range from 'lodash.range'
+// @deno-types="npm:@types/lodash.range"
+import range from 'npm:lodash.range'
 
 export function parse(input: string) {
   return input.split(',')

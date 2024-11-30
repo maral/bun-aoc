@@ -1,4 +1,5 @@
-import range from "lodash.range"
+// @deno-types="npm:@types/lodash.range"
+import range from 'npm:lodash.range'
 
 export function parse(input: string) {
   return input.split('\n')
@@ -12,7 +13,9 @@ export function partTwo(input: ReturnType<typeof parse>) {
   const seatIds = getSeatIds(input)
   const set = new Set(seatIds)
   const max = Math.max(...seatIds)
-  return range(0, max).filter(id => !set.has(id) && set.has(id - 1) && set.has(id + 1))[0]
+  return range(0, max).filter(
+    id => !set.has(id) && set.has(id - 1) && set.has(id + 1)
+  )[0]
 }
 
 function getSeatIds(input: ReturnType<typeof parse>) {

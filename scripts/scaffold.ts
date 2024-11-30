@@ -1,5 +1,5 @@
-import chalk from 'chalk'
-import dedent from 'dedent'
+import chalk from 'npm:chalk'
+import dedent from 'npm:dedent'
 import { existsSync } from 'node:fs'
 import { mkdir } from 'node:fs/promises'
 
@@ -57,10 +57,10 @@ export async function scaffold(day: number, year: number) {
     )
   })
 
-  await Bun.write(new URL(`${name}.test.ts`, directory.href), test)
-  await Bun.write(new URL(`${name}.ts`, directory.href), solution)
-  await Bun.write(new URL(`input.txt`, directory.href), input ?? '')
-  await Bun.write(new URL(`example.txt`, directory.href), '')
+  await Deno.writeTextFile(new URL(`${name}.test.ts`, directory.href), test)
+  await Deno.writeTextFile(new URL(`${name}.ts`, directory.href), solution)
+  await Deno.writeTextFile(new URL(`input.txt`, directory.href), input ?? '')
+  await Deno.writeTextFile(new URL(`example.txt`, directory.href), '')
 
   console.log('📂 You all set up, have fun!')
 }
