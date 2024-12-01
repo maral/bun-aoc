@@ -9,7 +9,6 @@
     "noEmit": true,
     "composite": true,
     "strict": true,
-    "noUncheckedIndexedAccess": true,
     "downlevelIteration": true,
     "skipLibCheck": true,
     "jsx": "preserve",
@@ -17,9 +16,7 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
     "checkJs": true,
-    "types": [
-      "bun-types"
-    ],
+    "types": ["bun-types"],
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"]

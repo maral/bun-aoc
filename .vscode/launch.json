@@ -6,13 +6,14 @@
   "configurations": [
     {
       "type": "bun",
-      "internalConsoleOptions": "neverOpen",
+      // "internalConsoleOptions": "neverOpen",
       "request": "launch",
-      "name": "Debug File",
-      "program": "${file}",
+      "name": "Debug solve script",
+      "program": "${workspaceFolder}/scripts/solve.ts",
+      "args": ["${fileBasenameNoExtension}", "2023"],
       "cwd": "${workspaceFolder}",
-      "stopOnEntry": false,
-      "watchMode": false
+      "stopOnEntry": true,
+      "watchMode": true
     },
     {
       "type": "bun",
