@@ -13,13 +13,8 @@ export function partOne(input: ReturnType<typeof parse>) {
     for (let x = 0; x < input.length; x++) {
       for (const dx of [-1, 0, 1]) {
         for (const dy of [-1, 0, 1]) {
-          sum += range(4)
-            .map(
-              n =>
-                y + dy * n >= 0 &&
-                y + dy * n < input.length &&
-                (input[y + dy * n][x + dx * n] ?? '') === 'XMAS'[n]
-            )
+          sum += [0, 1, 2, 3]
+            .map(n => (input[y + dy * n]?.[x + dx * n] ?? '') === 'XMAS'[n])
             .every(b => b)
             ? 1
             : 0
