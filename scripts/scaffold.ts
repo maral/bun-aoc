@@ -39,12 +39,16 @@ export async function scaffold(day: number, year: number) {
 
   const solution = dedent`
   export function parse(input: string) {
-    return input
+    return input.split('\\n').map(line => line.split(' ').map(n => parseInt(n)))
   }
   
-  export function partOne(input: ReturnType<typeof parse>) {}
+  export function partOne(input: ReturnType<typeof parse>) {
 
-  export function partTwo(input: ReturnType<typeof parse>) {}
+  }
+
+  export function partTwo(input: ReturnType<typeof parse>) {
+    
+  }
   `
 
   console.log(`📂 Fetching your input`)
