@@ -5,16 +5,16 @@ export function parse(input: string) {
     .map(line => line.split('|').map(n => parseInt(n)))
     .reduce((prev, [a, b]) => {
       if (prev.has(a)) {
-        prev.get(a)!.push(b)
+        prev.get(a)!.add(b)
       } else {
-        prev.set(a, [b])
+        prev.set(a, new Set<number>([b]))
       }
       return prev
-    }, new Map<number, number[]>())
+    }, new Map<number, Set<number>>())
   return [
     ordering,
     lines.split('\n').map(line => line.split(',').map(n => parseInt(n)))
-  ] as [Map<number, number[]>, number[][]]
+  ] as [Map<number, Set<number>>, number[][]]
 }
 
 export function partOne([ordering, lines]: ReturnType<typeof parse>) {
@@ -24,7 +24,10 @@ export function partOne([ordering, lines]: ReturnType<typeof parse>) {
       line.every((n, i) => {
         return (
           !ordering.has(n) ||
-          !ordering.get(n)!.some(a => line.slice(0, i).includes(a))
+          !ordering
+            .get(n)!
+            .values()
+            .some(a => line.slice(0, i).includes(a))
         )
       })
     ) {
@@ -45,12 +48,12 @@ export function partTwo([ordering, lines]: ReturnType<typeof parse>) {
   return sum
 }
 
-function customSort(line: number[], ordering: Map<number, number[]>) {
+function customSort(line: number[], ordering: Map<number, Set<number>>) {
   const sorted = [...line]
   sorted.sort((a, b) =>
-    ordering.has(a) && ordering.get(a)?.includes(b)
+    ordering.has(a) && ordering.get(a)?.has(b)
       ? -1
-      : ordering.has(b) && ordering.get(b)?.includes(a)
+      : ordering.has(b) && ordering.get(b)?.has(a)
         ? 1
         : 0
   )
