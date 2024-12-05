@@ -28,13 +28,40 @@ export function partOne([ordering, lines]: ReturnType<typeof parse>) {
         )
       })
     ) {
-      sum += line[Math.round((line.length - 1) / 2)]
+      sum += getMiddle(line)
     }
   }
   return sum
 }
 
 export function partTwo([ordering, lines]: ReturnType<typeof parse>) {
+  let sum = 0
+  for (let line of lines) {
+    const sorted = customSort(line, ordering)
+    if (line.toString() !== sorted.toString()) {
+      sum += getMiddle(sorted)
+    }
+  }
+  return sum
+}
+
+function customSort(line: number[], ordering: Map<number, number[]>) {
+  const sorted = [...line]
+  sorted.sort((a, b) =>
+    ordering.has(a) && ordering.get(a)?.includes(b)
+      ? -1
+      : ordering.has(b) && ordering.get(b)?.includes(a)
+        ? 1
+        : 0
+  )
+  return sorted
+}
+
+function getMiddle(line: number[]) {
+  return line[Math.round((line.length - 1) / 2)]
+}
+
+export function partTwoOld([ordering, lines]: ReturnType<typeof parse>) {
   let sum = 0
   for (let line of lines) {
     let isCorrect = true
