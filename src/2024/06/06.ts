@@ -10,6 +10,15 @@ let directions = [
 ]
 
 export function partOne(input: ReturnType<typeof parse>) {
+  walkOver(input)
+  return input.reduce(
+    (sum, row) =>
+      sum + row.reduce((sumRow, col) => sumRow + (col === 'X' ? 1 : 0), 0),
+    0
+  )
+}
+
+function walkOver(input: ReturnType<typeof parse>) {
   const position = findStart(input)
   let direction = 0
   while (true) {
@@ -29,20 +38,16 @@ export function partOne(input: ReturnType<typeof parse>) {
     position[0] += directions[direction][0]
     position[1] += directions[direction][1]
   }
-  return input.reduce(
-    (sum, row) =>
-      sum + row.reduce((sumRow, col) => sumRow + (col === 'X' ? 1 : 0), 0),
-    0
-  )
 }
 
 export function partTwo(input: ReturnType<typeof parse>) {
   let sum = 0
   const start = findStart(input)
+  walkOver(input)
 
   for (let [y, row] of input.entries()) {
     for (let [x, char] of row.entries()) {
-      if (char === '.') {
+      if (char === 'X') {
         input[y][x] = '#'
         if (isLoop(input, start)) {
           sum++
