@@ -1,5 +1,3 @@
-import range from 'lodash.range'
-
 export function parse(input: string) {
   return input.split('\n').map(line => line.split(''))
 }
