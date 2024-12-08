@@ -46,7 +46,6 @@ function getFinalOccupiedSeats(
     if (!hasChanged) {
       break
     }
-    console.log(input.map(l => l.join('')).join('\n') + '\n')
   }
 
   return input.reduce(
