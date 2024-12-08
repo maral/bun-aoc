@@ -1,6 +1,9 @@
+import { parseCharGrid } from '../../utils'
+
 type Input = ReturnType<typeof parse>
+
 export function parse(input: string) {
-  return input.split('\n').map(line => line.split(''))
+  return parseCharGrid(input)
 }
 
 export function partOne(input: Input) {

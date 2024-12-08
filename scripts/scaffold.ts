@@ -22,15 +22,15 @@ export async function scaffold(day: number, year: number) {
 
   const { default: example } = await import('./example.txt')
 
-  describe(${`'Day ${day}'`}, () => {
+  describe(${`'Day ${year}/${day}'`}, () => {
     describe('Part One', () => {
-      test('test input', () => {
+      test('test input ${year}/${day}a', () => {
         expect(partOne(parse(example))).toBe(0)
       })
     })
     
     describe('Part Two', () => {
-      test('test input', () => {
+      test('test input ${year}/${day}b', () => {
         expect(partTwo(parse(example))).toBe(0)
       })
     })
@@ -38,15 +38,19 @@ export async function scaffold(day: number, year: number) {
   `
 
   const solution = dedent`
+  import { parseNumbersGrid } from '../../utils'
+
+  type Input = ReturnType<typeof parse>
+
   export function parse(input: string) {
-    return input.split('\\n').map(line => line.split(' ').map(n => parseInt(n)))
+    return parseNumbersGrid(input)
   }
   
-  export function partOne(input: ReturnType<typeof parse>) {
+  export function partOne(input: Input) {
 
   }
 
-  export function partTwo(input: ReturnType<typeof parse>) {
+  export function partTwo(input: Input) {
     
   }
   `
