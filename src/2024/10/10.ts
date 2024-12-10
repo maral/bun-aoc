@@ -1,5 +1,11 @@
 import range from 'lodash.range'
-import { Coord, get2DKey, get4Directions, parseNumbersGrid, step } from '../../utils'
+import {
+  Coord,
+  get2DKey,
+  get4Directions,
+  parseNumbersGrid,
+  step
+} from '../../utils'
 
 type Input = ReturnType<typeof parse>
 
@@ -49,7 +55,9 @@ function getTrailheadScore(
         }
         if (input[pos[1]]?.[pos[0]] === i) {
           nextPositions.push(pos)
-          visited.add(get2DKey(pos))
+          if (!uniquePath) {
+            visited.add(get2DKey(pos))
+          }
         }
       }
     }
