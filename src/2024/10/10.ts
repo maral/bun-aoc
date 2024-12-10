@@ -1,5 +1,5 @@
 import range from 'lodash.range'
-import { Coord, Direction, get2DKey, get4Directions, parseCharGrid, parseNumbersGrid, step } from '../../utils'
+import { Coord, get2DKey, get4Directions, parseNumbersGrid, step } from '../../utils'
 
 type Input = ReturnType<typeof parse>
 
