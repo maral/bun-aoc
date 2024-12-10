@@ -1,5 +1,5 @@
 import range from 'lodash.range'
-import { parseCharGrid, parseNumbersGrid } from '../../utils'
+import { Coord, Direction, get2DKey, get4Directions, parseCharGrid, parseNumbersGrid, step } from '../../utils'
 
 type Input = ReturnType<typeof parse>
 
@@ -31,32 +31,25 @@ export function partTwo(input: Input) {
   return sum
 }
 
-const directions = [
-  [0, 1],
-  [1, 0],
-  [-1, 0],
-  [0, -1]
-]
-
 function getTrailheadScore(
   input: Input,
   x: number,
   y: number,
   uniquePath = false
 ) {
-  let currPositions: [number, number][] = [[x, y]]
-  let nextPositions: [number, number][] = []
+  let currPositions: Coord[] = [[x, y]]
+  let nextPositions: Coord[] = []
   const visited = new Set<number>()
   for (const i of range(1, 10)) {
     for (const position of currPositions) {
-      for (const d of directions) {
-        const pos: [number, number] = [position[0] + d[0], position[1] + d[1]]
-        if (!uniquePath && visited.has(getKey(pos))) {
+      for (const d of get4Directions()) {
+        const pos: Coord = step(position, d)
+        if (!uniquePath && visited.has(get2DKey(pos))) {
           continue
         }
         if (input[pos[1]]?.[pos[0]] === i) {
           nextPositions.push(pos)
-          visited.add(getKey(pos))
+          visited.add(get2DKey(pos))
         }
       }
     }
@@ -64,8 +57,4 @@ function getTrailheadScore(
     nextPositions = []
   }
   return currPositions.length
-}
-
-function getKey([x, y]: [number, number]) {
-  return x * 100000 + y
 }
