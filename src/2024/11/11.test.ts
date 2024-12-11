@@ -1,8 +1,6 @@
 import { describe, expect, test } from 'bun:test'
 import { parse, partOne, partTwo } from './11'
 
-const { default: example } = await import('./example.txt')
-
 describe('Day 2024/11', () => {
   describe('Part One', () => {
     test('test input 2024/11a', () => {

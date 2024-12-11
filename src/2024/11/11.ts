@@ -8,7 +8,6 @@ export function parse(input: string) {
 
 export function partOne(input: Input, rounds = 25) {
   return sum(input.map(s => getStoneCount(s, rounds)))
-
 }
 
 export function partTwo(input: Input, rounds = 75) {
