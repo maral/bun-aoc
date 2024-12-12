@@ -59,11 +59,7 @@ function getRegionPrice(
     area++
     for (const d of get4Directions()) {
       const [x, y] = step(current, d)
-      if (
-        input[y]?.[x] === undefined ||
-        visited.has(get2DKey([x, y])) ||
-        input[y]?.[x] !== char
-      ) {
+      if (input[y]?.[x] === undefined || input[y]?.[x] !== char) {
         perimeter++
         if (useSides) {
           walls[d].push([x, y])
