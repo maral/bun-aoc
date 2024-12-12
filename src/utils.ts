@@ -31,13 +31,23 @@ export const directionArray: Coord[] = [
 ]
 
 const directions: Direction[] = [0, 1, 2, 3]
-const directions8: Direction8[] = [0, 1, 2, 3, 4,5,6,7]
+const directions8: Direction8[] = [0, 1, 2, 3, 4, 5, 6, 7]
 export function get4Directions() {
   return directions
 }
 
 export function get8Directions() {
   return directions8
+}
+
+const directionNames = ['>', '^', '<', 'v']
+
+export function getDirectionName(d: Direction) {
+  return directionNames[d]
+}
+
+export function isDirectionVertical(d: Direction) {
+  return d === 1 || d === 3
 }
 
 export function step(position: Coord, direction: Direction): Coord {
