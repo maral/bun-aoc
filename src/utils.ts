@@ -9,6 +9,13 @@ export function parseNumbersGrid(input: string, numberSeparator = ' ') {
     .map(line => line.split(numberSeparator).map(n => parseInt(n)))
 }
 
+export function parseRegexNumberLine(regex: RegExp, line: string) {
+  return regex
+    .exec(line)!
+    .slice(1)
+    .map(n => parseInt(n))
+}
+
 /* results */
 export function sum(numbers: number[]) {
   return numbers.reduce((total, n) => total + n, 0)
