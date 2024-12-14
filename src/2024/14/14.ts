@@ -2,10 +2,8 @@ import range from 'lodash.range'
 import {
   Coord,
   get2DKey,
-  parseNumbersGrid,
   parseRegexNumberLine,
-  product,
-  sum
+  product
 } from '../../utils'
 
 type Input = ReturnType<typeof parse>
