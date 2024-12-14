@@ -19,6 +19,7 @@
   "dependencies": {
     "@types/lodash.range": "^3.2.9",
     "compute-lcm": "^1.1.2",
+    "fast-cartesian": "^9.0.0",
     "js-sdsl": "^4.4.2",
     "lodash.range": "^3.2.0",
     "lodash.shuffle": "^4.2.0"

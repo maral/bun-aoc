@@ -1,3 +1,5 @@
+import fastCartesian from 'fast-cartesian'
+
 /* parsing */
 export function parseCharGrid(input: string) {
   return input.split('\n').map(line => line.split(''))
@@ -66,4 +68,8 @@ export function step(position: Coord, direction: Direction): Coord {
 
 export function get2DKey([x, y]: Coord) {
   return x * 10000000 + y
+}
+
+export function cartesian(array: number[][]): number[][] {
+  return fastCartesian(array)
 }
