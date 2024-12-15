@@ -30,6 +30,7 @@ export function product(numbers: number[]) {
 /* grid functions */
 export type Coord = [number, number]
 export type Direction = 0 | 1 | 2 | 3
+export type DirectionName = '>' | 'v' | '<' | '^'
 export type Direction8 = Direction | 4 | 5 | 6 | 7
 
 export const directionArray: Coord[] = [
@@ -38,6 +39,13 @@ export const directionArray: Coord[] = [
   [-1, 0],
   [0, -1]
 ]
+
+export const directionMap: Record<DirectionName, Coord> = {
+  '>': [1, 0],
+  v: [0, 1],
+  '<': [-1, 0],
+  '^': [0, -1]
+}
 
 const directions: Direction[] = [0, 1, 2, 3]
 const directions8: Direction8[] = [0, 1, 2, 3, 4, 5, 6, 7]
@@ -49,7 +57,7 @@ export function get8Directions() {
   return directions8
 }
 
-const directionNames = ['>', '^', '<', 'v']
+export const directionNames = ['>', '^', '<', 'v']
 
 export function getDirectionName(d: Direction) {
   return directionNames[d]
@@ -63,6 +71,16 @@ export function step(position: Coord, direction: Direction): Coord {
   return [
     position[0] + directionArray[direction][0],
     position[1] + directionArray[direction][1]
+  ]
+}
+
+export function stepByName(
+  position: Coord,
+  directionName: DirectionName
+): Coord {
+  return [
+    position[0] + directionMap[directionName][0],
+    position[1] + directionMap[directionName][1]
   ]
 }
 
