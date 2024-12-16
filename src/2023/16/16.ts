@@ -1,6 +1,5 @@
 import { Stack } from 'js-sdsl'
 import range from 'lodash.range'
-import shuffle from 'lodash.shuffle'
 
 type Direction = 'up' | 'down' | 'left' | 'right'
 

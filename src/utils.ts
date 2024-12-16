@@ -1,4 +1,5 @@
 import fastCartesian from 'fast-cartesian'
+import range from 'lodash.range'
 
 /* parsing */
 export function parseCharGrid(input: string) {
@@ -57,10 +58,14 @@ export function get8Directions() {
   return directions8
 }
 
-export const directionNames = ['>', '^', '<', 'v']
+export const directionNames = ['>', 'v', '<', '^']
 
 export function getDirectionName(d: Direction) {
   return directionNames[d]
+}
+
+export function areDirectionsOpposite(a: Direction, b: Direction) {
+  return Math.abs(a - b) === 2
 }
 
 export function isDirectionVertical(d: Direction) {
@@ -88,6 +93,37 @@ export function get2DKey([x, y]: Coord) {
   return x * 10000000 + y
 }
 
+export function keyToCoord(key: number) {
+  return [Math.floor(key / 10000000), key % 10000000]
+}
+
 export function cartesian(array: number[][]): number[][] {
   return fastCartesian(array)
+}
+
+export function findCharPosition(map: string[][], char: string): Coord {
+  for (const [y, x] of cartesian([range(map.length), range(map[0].length)])) {
+    if (map[y][x] === char) {
+      return [x, y]
+    }
+  }
+  return [1, 1]
+}
+
+export function coordsEqual(a: Coord, b: Coord) {
+  return a[0] === b[0] && a[1] === b[1]
+}
+
+export function printMap(map: string[][], position?: Coord) {
+  process.stdout.write(
+    map
+      .map((line, y) =>
+        line
+          .map((char, x) =>
+            position && position[0] === x && position[1] === y ? '@' : char
+          )
+          .join('')
+      )
+      .join('\n')
+  )
 }
