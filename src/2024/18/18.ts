@@ -72,9 +72,15 @@ export function findFastestPath(
 export function partTwo(input: Input, steps = 1024) {
   const w = Math.max(...input.map(([x, _]) => x)) + 1
   const h = Math.max(...input.map(([_, y]) => y)) + 1
-  for (let i = steps; i < input.length; i++) {
+  let bottom = steps
+  let top = input.length
+  while (bottom < top - 1) {
+    const i = Math.floor((bottom + top) / 2)
     if (findFastestPath(input, w, h, i) === 0) {
-      return input[i - 1].join(',')
+      top = i
+    } else {
+      bottom = i
     }
   }
+  return input[bottom].join(',')
 }
