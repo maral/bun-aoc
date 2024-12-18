@@ -54,6 +54,10 @@ export function get4Directions() {
   return directions
 }
 
+export function turn(direction: Direction, degrees: number): Direction {
+  return ((((direction + degrees / 90) % 4) + 4) % 4) as Direction
+}
+
 export function get8Directions() {
   return directions8
 }
@@ -72,10 +76,10 @@ export function isDirectionVertical(d: Direction) {
   return d === 1 || d === 3
 }
 
-export function step(position: Coord, direction: Direction): Coord {
+export function step(position: Coord, direction: Direction, steps = 1): Coord {
   return [
-    position[0] + directionArray[direction][0],
-    position[1] + directionArray[direction][1]
+    position[0] + directionArray[direction][0] * steps,
+    position[1] + directionArray[direction][1] * steps
   ]
 }
 
