@@ -19,6 +19,11 @@ export function parseRegexNumberLine(regex: RegExp, line: string) {
     .map(n => parseInt(n))
 }
 
+export function ints(input: string): number[] {
+  const matches = input.match(/-?\d+/g)
+  return matches ? matches.map(Number) : []
+}
+
 /* results */
 export function sum(numbers: number[]) {
   return numbers.reduce((total, n) => total + n, 0)
