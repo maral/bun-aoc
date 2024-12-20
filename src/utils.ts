@@ -12,11 +12,12 @@ export function parseNumbersGrid(input: string, numberSeparator = ' ') {
     .map(line => line.split(numberSeparator).map(n => parseInt(n)))
 }
 
+export function parseRegexLine(regex: RegExp, line: string) {
+  return regex.exec(line)!.slice(1)
+}
+
 export function parseRegexNumberLine(regex: RegExp, line: string) {
-  return regex
-    .exec(line)!
-    .slice(1)
-    .map(n => parseInt(n))
+  return parseRegexLine(regex, line).map(n => parseInt(n))
 }
 
 export function ints(input: string): number[] {
