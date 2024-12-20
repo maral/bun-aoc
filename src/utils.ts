@@ -123,7 +123,11 @@ export function coordsEqual(a: Coord, b: Coord) {
   return a[0] === b[0] && a[1] === b[1]
 }
 
-export function printMap(map: string[][], position?: Coord) {
+export function cloneMap<T>(map: T[][]) {
+  return map.map(line => [...line])
+}
+
+export function printMap<T>(map: T[][], position?: Coord) {
   process.stdout.write(
     map
       .map((line, y) =>
