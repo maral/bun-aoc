@@ -55,9 +55,14 @@ export const directionMap: Record<DirectionName, Coord> = {
 }
 
 const directions: Direction[] = [0, 1, 2, 3]
+const directionNames: DirectionName[] = ['>', 'v', '<', '^']
 const directions8: Direction8[] = [0, 1, 2, 3, 4, 5, 6, 7]
 export function get4Directions() {
   return directions
+}
+
+export function getDirectionNames() {
+  return directionNames
 }
 
 export function turn(direction: Direction, degrees: number): Direction {
@@ -67,8 +72,6 @@ export function turn(direction: Direction, degrees: number): Direction {
 export function get8Directions() {
   return directions8
 }
-
-export const directionNames = ['>', 'v', '<', '^']
 
 export function getDirectionName(d: Direction) {
   return directionNames[d]
