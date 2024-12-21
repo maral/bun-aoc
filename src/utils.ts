@@ -26,12 +26,20 @@ export function ints(input: string): number[] {
 }
 
 /* results */
-export function sum(numbers: number[]) {
-  return numbers.reduce((total, n) => total + n, 0)
+export function sum(numbers: Iterable<number>) {
+  let sum = 0
+  for (const i of numbers) {
+    sum += i
+  }
+  return sum
 }
 
-export function product(numbers: number[]) {
-  return numbers.reduce((total, n) => total * n, 1)
+export function product(numbers: Iterable<number>) {
+  let product = 1
+  for (const i of numbers) {
+    product *= i
+  }
+  return product
 }
 
 /* grid functions */
