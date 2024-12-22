@@ -9,10 +9,4 @@ describe('Day 2024/21', () => {
       expect(partOne(parse(example))).toBe(126384)
     })
   })
-  
-  describe('Part Two', () => {
-    test('test input 2024/21b', () => {
-      expect(partTwo(parse(example))).toBe(0)
-    })
-  })
 })
