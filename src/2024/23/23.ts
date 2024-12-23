@@ -32,10 +32,10 @@ export function partTwo(input: Input) {
   let max = 0
   let maxPassword = ''
   for (const [node, connections] of input.entries()) {
-    const subgraph = findLargestFullGraph(
+    const subgraph = findLargestFullSubgraph(
       input,
       [node],
-      Array.from(connections),
+      Array.from(connections).filter(c => c > node),
       0
     )
 
@@ -48,7 +48,7 @@ export function partTwo(input: Input) {
   return maxPassword
 }
 
-function findLargestFullGraph(
+function findLargestFullSubgraph(
   graph: Input,
   inSet: string[],
   all: string[],
@@ -60,9 +60,9 @@ function findLargestFullGraph(
 
   const next = all[index]
   const nextNode = graph.get(next)!
-  const set1 = findLargestFullGraph(graph, inSet, all, index + 1)
+  const set1 = findLargestFullSubgraph(graph, inSet, all, index + 1)
   if (inSet.every(a => nextNode.has(a))) {
-    const set2 = findLargestFullGraph(graph, [...inSet, next], all, index + 1)
+    const set2 = findLargestFullSubgraph(graph, [...inSet, next], all, index + 1)
     return set1.length > set2.length ? set1 : set2
   }
   return set1
