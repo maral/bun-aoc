@@ -111,11 +111,11 @@ export function stepByName(
 }
 
 export function get2DKey([x, y]: Coord) {
-  return x * 10000000 + y
+  return (x + 5000000) * 10000000 + y + 5000000
 }
 
 export function keyToCoord(key: number) {
-  return [Math.floor(key / 10000000), key % 10000000]
+  return [Math.floor(key / 10000000) - 5000000, key % 10000000 - 5000000]
 }
 
 export function cartesian(array: number[][]): number[][] {

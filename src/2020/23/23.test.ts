@@ -12,7 +12,7 @@ describe('Day 2020/23', () => {
   
   describe('Part Two', () => {
     test('test input 2020/23b', () => {
-      expect(partTwo(parse(example))).toBe(0)
+      expect(partTwo(parse(example))).toBe(149245887792)
     })
   })
 })
