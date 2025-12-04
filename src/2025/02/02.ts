@@ -1,6 +1,3 @@
-import range from 'lodash.range'
-import { parseNumbersGrid } from '../../utils'
-
 type Input = ReturnType<typeof parse>
 
 export function parse(input: string) {
