@@ -34,10 +34,10 @@ export function partTwo(input: Input) {
 function step(input: Input) {
   let cleared = 0
   const next = cloneMap(input)
-  for (const row of range(input.length)) {
-    for (const col of range(input[row].length)) {
+  for (const [row, line] of input.entries()) {
+    for (const [col, char] of line.entries()) {
       if (
-        input[row][col] === '@' &&
+        char === '@' &&
         sum(
           dirs.map(neighbor =>
             input[row + neighbor[1]]?.[col + neighbor[0]] === '@' ? 1 : 0
