@@ -115,7 +115,7 @@ export function get2DKey([x, y]: Coord) {
 }
 
 export function keyToCoord(key: number) {
-  return [Math.floor(key / 10000000) - 5000000, key % 10000000 - 5000000]
+  return [Math.floor(key / 10000000) - 5000000, (key % 10000000) - 5000000]
 }
 
 export function cartesian(array: number[][]): number[][] {
@@ -151,4 +151,11 @@ export function printMap<T>(map: T[][], position?: Coord) {
       )
       .join('\n')
   )
+}
+
+export function rangesOverlap(
+  [from1, to1]: [number, number],
+  [from2, to2]: [number, number]
+) {
+  return from1 <= to2 && from2 <= to1
 }
