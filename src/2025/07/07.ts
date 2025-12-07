@@ -7,29 +7,14 @@ export function parse(input: string) {
 }
 
 export function partOne(input: Input) {
-  let beams = new Set([input[0].findIndex(char => char === 'S')])
-  let splits = 0
-  for (const line of input.slice(1)) {
-    const nextBeams = new Set<number>()
-    for (const beam of beams.values()) {
-      if (line[beam] === '^') {
-        splits++
-        if (beam > 0) {
-          nextBeams.add(beam - 1)
-        }
-        if (beam < line.length - 1) {
-          nextBeams.add(beam + 1)
-        }
-      } else {
-        nextBeams.add(beam)
-      }
-    }
-    beams = nextBeams
-  }
-  return splits
+  return processBeams(input).splits
 }
 
 export function partTwo(input: Input) {
+  return sum(processBeams(input).beams.values())
+}
+
+function processBeams(input: Input) {
   let beams = new Map<number, number>([
     [input[0].findIndex(char => char === 'S'), 1]
   ])
@@ -52,5 +37,5 @@ export function partTwo(input: Input) {
     }
     beams = nextBeams
   }
-  return sum(beams.values())
+  return { beams, splits }
 }
