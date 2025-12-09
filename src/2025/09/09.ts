@@ -27,7 +27,7 @@ type Range = Coord
 type CornerMap = Map<Coord, Range>
 
 export function partTwo(input: Input) {
-  input.sort((a, b) => (a[0] - b[0]) * 10000 + a[1] - b[1])
+  input.sort((a, b) => (a[0] - b[0]) * 100000 + a[1] - b[1])
 
   let max = 0
   // y => x
@@ -37,53 +37,76 @@ export function partTwo(input: Input) {
   for (let i = 0; i < input.length; i += 2) {
     const start = input[i]
     const end = input[i + 1]
+    const newRange = [start[1], end[1]] as Range
 
     if (ranges.length === 0) {
-      ranges.push([start[1], end[1]])
+      ranges.push(newRange)
     } else {
       // try out new corners
       max = Math.max(max, getMax(openCorners, start))
       max = Math.max(max, getMax(openCorners, end))
 
-      // update ranges - remove closed ranges
-      ranges = ranges.filter(r => r[0] !== start[1] || r[1] !== end[1])
-
+      const nextRanges: Range[] = []
       for (const range of ranges) {
-        // update range - shrinking
-        if (start[1] === range[0]) {
-          range[0] = end[1]
-        }
-        if (end[1] === range[1]) {
-          range[1] = start[1]
-        }
-        // update range - expanding
-        if (end[1] === range[0]) {
-          range[0] = start[1]
-        }
-        if (start[1] === range[1]) {
-          range[1] = end[1]
+        if (rangesEqual(range, newRange)) {
+          // do nothing
+        } else if (rangeWithinRange(range, newRange)) {
+          // split ranges
+          nextRanges.push([range[0], newRange[0]])
+          nextRanges.push([newRange[1], range[1]])
+        } else {
+          // update range - shrinking
+          if (newRange[0] === range[0]) {
+            range[0] = newRange[1]
+          } else if (newRange[1] === range[1]) {
+            range[1] = newRange[0]
+          }
+          // update range - expanding
+          else if (newRange[1] === range[0]) {
+            range[0] = newRange[0]
+          } else if (newRange[0] === range[1]) {
+            range[1] = newRange[1]
+          }
+          nextRanges.push(range)
         }
       }
 
+      if (!ranges.some(range => rangesOverlap(range, newRange))) {
+        // range outside - add new range
+        nextRanges.push(newRange)
+      }
+      nextRanges.sort((a, b) => a[0] - b[0])
+      const cleanedRanges: Range[] = []
+      // merge overlapping
+      for (let i = 0; i < nextRanges.length; i++) {
+        if (
+          i < nextRanges.length - 1 &&
+          rangesOverlap(nextRanges[i], nextRanges[i + 1])
+        ) {
+          cleanedRanges.push(mergeRanges(nextRanges[i], nextRanges[i + 1])!)
+          i++
+        } else {
+          cleanedRanges.push(nextRanges[i])
+        }
+      }
+      ranges = cleanedRanges
+
       // clean up corners
       for (const [corner, cornerRange] of openCorners.entries()) {
-        if (!ranges.some(range => rangesOverlap(cornerRange, range))) {
+        if (
+          !ranges.some(
+            range => rangesOverlap(cornerRange, range) && inRange(range, corner)
+          )
+        ) {
           openCorners.delete(corner)
         } else {
           const range = ranges.find(
             r => rangesOverlap(cornerRange, r) && inRange(r, corner)
           )!
-          console.log('corner cleanup', corner)
-          console.log('found range', range)
-          console.log('corner range', cornerRange)
-          console.log('new range', [
-            Math.max(cornerRange[0], range[0]),
-            Math.min(cornerRange[1], range[1])
-          ])
-          openCorners.set(corner, [
-            Math.max(cornerRange[0], range[0]),
-            Math.min(cornerRange[1], range[1])
-          ])
+          const intersection = getRangeIntersection(range, cornerRange)
+          if (intersection) {
+            openCorners.set(corner, intersection)
+          }
         }
       }
     }
@@ -114,21 +137,30 @@ function inRange(range: Range, newCoord: Coord) {
   return range[0] <= newCoord[1] && newCoord[1] <= range[1]
 }
 
-/*
-...............
-...##########.........
-...#........#..
-...#...######.......
-...#...#....
-...#...####....
-...#......#....
-...#......#....
-...#......#....
-...########...........
-...............
-...............
-...............
-...............
+function rangeWithinRange(range: Range, rangeToCheck: Range) {
+  return range[0] < rangeToCheck[0] && rangeToCheck[1] < range[1]
+}
 
+function rangesEqual(range1: Range, range2: Range) {
+  return range1[0] === range2[0] && range1[1] === range2[1]
+}
 
-*/
+function getRangeIntersection(range1: Range, range2: Range) {
+  if (!rangesOverlap(range1, range2)) {
+    return null
+  }
+  return [
+    Math.max(range1[0], range2[0]),
+    Math.min(range1[1], range2[1])
+  ] as Range
+}
+
+function mergeRanges(range1: Range, range2: Range) {
+  if (!rangesOverlap(range1, range2)) {
+    return null
+  }
+  return [
+    Math.min(range1[0], range2[0]),
+    Math.max(range1[1], range2[1])
+  ] as Range
+}
