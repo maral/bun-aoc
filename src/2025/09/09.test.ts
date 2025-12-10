@@ -23,7 +23,7 @@ describe('Day 2025/9', () => {
     })
 
     test('test input 2025/9bIII', () => {
-      expect(partTwo(parse(example3))).toBe(30)
+      expect(partTwo(parse(example3))).toBe(35)
     })
 
     test('test input 2025/9bIV', () => {
