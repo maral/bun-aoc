@@ -43,8 +43,11 @@ export function partTwo(input: Input) {
       ranges.push(newRange)
     } else {
       // try out new corners
+      const prevMax = max
       max = Math.max(max, getMax(openCorners, start))
       max = Math.max(max, getMax(openCorners, end))
+      if (max > prevMax) {
+      }
 
       const nextRanges: Range[] = []
       for (const range of ranges) {
@@ -124,6 +127,16 @@ export function partTwo(input: Input) {
 }
 
 function getMax(openCorners: CornerMap, point: Coord) {
+  const x = openCorners
+    .entries()
+    .map(([corner, range]) => [
+      corner,
+      inRange(range, point) ? getArea(corner, point) : 0
+    ] as [Coord, number]).toArray()
+  const max = Math.max(...x.map(y => y[1]))
+  console.log('max', max)
+  console.log(x[x.findIndex(y => y[1] === max)][0])
+  console.log(point)
   return Math.max(
     ...openCorners
       .entries()
