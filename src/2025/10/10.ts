@@ -134,7 +134,6 @@ function getSteps2({ buttons, joltages }: Input[0]) {
   )
   const paramIndexes = new Set<number>()
 
-  const solutionVectors = new Map<number, number[]>()
   // abs = -1
   // -1 => (4 1 0)
   // 2 => (1 0 1)
@@ -147,18 +146,22 @@ function getSteps2({ buttons, joltages }: Input[0]) {
   // x2 > 0 -> t2 > 0
   // x0 > 0 -> t2 + 4 > 0 -> t2 > -4
   /*
-    ex2:
-    x = (1 0 0) + t1(0 1 -1) + t2(0 0 1)
-    x0 = 1
-    x1 = t1
-    x2 = t2 - t1
-    t1 >= 0
-    t2 - t1 >= 0
-    t2 > t1
+  ex2:
+  x = (1 0 0) + t1(0 1 -1) + t2(0 0 1)
+  x0 = 1
+  x1 = t1
+  x2 = t2 - t1
+  t1 >= 0
+  t2 - t1 >= 0
+  t2 > t1
   */
 
   // work out solutions (formulas)
   let foundSolutions = 0
+  const solutionVectors = new Map<number, number[]>()
+  const solutionFormulas: Map<number, number>[] = new Array(buttons.length)
+    .fill(0)
+    .map(() => new Map())
   for (let i = matrix.length - 1; i >= 0; i--) {
     const line = matrix[i]
     const firstNonZeroIndex = line.findIndex(n => n !== 0)
@@ -170,6 +173,7 @@ function getSteps2({ buttons, joltages }: Input[0]) {
       for (let j = firstNonZeroIndex + 1; j < expectedOffset; j++) {
         paramIndexes.add(j)
         solutions[j] = params => params.get(j)!
+        solutionFormulas[j].set(j, 1)
         foundSolutions++
       }
     }
@@ -181,13 +185,59 @@ function getSteps2({ buttons, joltages }: Input[0]) {
           .map(k => line[k] * solutions[k])
         return line[line.length - 1] - sum(others)
       }
+      const following = range(
+        firstNonZeroIndex + 1,
+        buttons.length
+      ).toReversed()
+      const formula = solutionFormulas[buttons.length - foundSolutions - 1]
+      formula.set(0, line[line.length - 1])
+      for (const k of following) {
+        const f = solutionFormulas[k]
+        for (const [p, value] of f.entries()) {
+          formula.set(p, -line[k] * value + (formula.get(p) ?? 0))
+        }
+      }
       foundSolutions++
     }
   }
-  // printMatrix(matrix)
-
-  const paramIndexesArray = Array.from(paramIndexes)
+  for (const f of solutionFormulas) {
+    for (const [key, value] of f) {
+      if (value === 0) {
+        f.delete(key)
+      }
+    }
+  }
+  console.log('----')
+  printMatrix(matrix)
+  const paramIndexesArray = Array.from(paramIndexes).sort()
   const params = new Map(paramIndexesArray.map(i => [i, 0]))
+
+  console.log(':::')
+  const vectors: number[][] = []
+  for (const i of [0, ...paramIndexesArray]) {
+    const vector: number[] = []
+    for (const f of solutionFormulas) {
+      vector.push(f.get(i) ?? 0)
+    }
+    vectors.push(vector)
+    console.log(`${i}: ( ${vector.join(' ')} )`)
+  }
+  console.log(':::')
+  for (const f of solutionFormulas) {
+    console.log(
+      f
+        .entries()
+        .toArray()
+        .map(([key, value]) =>
+          key !== 0
+            ? `${
+                value === 1 ? '' : value === -1 ? '-' : `${value}`
+              }${`t${key}`}`
+            : value
+        )
+        .join(' + ')
+    )
+  }
 
   const max = Math.max(...joltages)
 
@@ -239,61 +289,61 @@ function getSteps2({ buttons, joltages }: Input[0]) {
   // }
   // console.log('solution', lastSolution)
 
-  let lastSolution = getSolution(solutions, params)
-  let negativeSum = getNegativeSum(lastSolution)
-  let min = isValid(lastSolution) ? sum(lastSolution) : Infinity
-  // first go towards all positives
-  for (const p of paramIndexesArray) {
-    for (const c of [-1, 1]) {
-      while (negativeSum > 0) {
-        const prev = negativeSum
-        console.log(negativeSum)
-        params.set(p, params.get(p)! + c)
-        console.log(params.values().toArray())
-        const solution = getSolution(solutions, params)
-        console.log(solution)
-        printMatrix(matrix)
-        if (getNegativeSum(solution) >= negativeSum) {
-          params.set(p, params.get(p)! - c)
-        } else {
-          negativeSum = getNegativeSum(solution)
-        }
-      }
-    }
-  }
-  for (const p of paramIndexesArray) {
-    // we're already all positives, go up/down to find lowest values
-    for (const c of [-1, 1]) {
-      while (true) {
-        params.set(p, params.get(p)! + c)
-        // console.log(params.values().toArray())
-        const solution = getSolution(solutions, params)
-        if (!isValid(solution) || sum(solution) >= min) {
-          params.set(p, params.get(p)! - c)
-          break
-        }
+  // let lastSolution = getSolution(solutions, params)
+  // let negativeSum = getNegativeSum(lastSolution)
+  // let min = isValid(lastSolution) ? sum(lastSolution) : Infinity
+  // // first go towards all positives
+  // for (const p of paramIndexesArray) {
+  //   for (const c of [-1, 1]) {
+  //     while (negativeSum > 0) {
+  //       const prev = negativeSum
+  //       console.log(negativeSum)
+  //       params.set(p, params.get(p)! + c)
+  //       console.log(params.values().toArray())
+  //       const solution = getSolution(solutions, params)
+  //       console.log(solution)
+  //       printMatrix(matrix)
+  //       if (getNegativeSum(solution) >= negativeSum) {
+  //         params.set(p, params.get(p)! - c)
+  //       } else {
+  //         negativeSum = getNegativeSum(solution)
+  //       }
+  //     }
+  //   }
+  // }
+  // for (const p of paramIndexesArray) {
+  //   // we're already all positives, go up/down to find lowest values
+  //   for (const c of [-1, 1]) {
+  //     while (true) {
+  //       params.set(p, params.get(p)! + c)
+  //       // console.log(params.values().toArray())
+  //       const solution = getSolution(solutions, params)
+  //       if (!isValid(solution) || sum(solution) >= min) {
+  //         params.set(p, params.get(p)! - c)
+  //         break
+  //       }
 
-        // console.log(solution)
-        if (isValid(solution)) {
-          min = sum(solution)
-          lastSolution = solution
-        }
-      }
-    }
-  }
-  console.log(min)
-  console.log(lastSolution)
+  //       // console.log(solution)
+  //       if (isValid(solution)) {
+  //         min = sum(solution)
+  //         lastSolution = solution
+  //       }
+  //     }
+  //   }
+  // }
+  // console.log(min)
+  // console.log(lastSolution)
 
-  if (!verifySolution(lastSolution, buttons, joltages)) {
-    console.log('########################')
-    console.log('########################')
-    console.log('########################')
-    console.log('########################')
-    console.log('########################')
-    console.log('########################')
-    console.log('########################')
-  }
-  return min
+  // if (!verifySolution(lastSolution, buttons, joltages)) {
+  //   console.log('########################')
+  //   console.log('########################')
+  //   console.log('########################')
+  //   console.log('########################')
+  //   console.log('########################')
+  //   console.log('########################')
+  //   console.log('########################')
+  // }
+  return 0 // min
 }
 
 function getSolution(solutions: SolutionFn[], params: Map<number, number>) {
@@ -375,12 +425,3 @@ function verifySolution(
   }
   return state.every(n => Math.abs(n) < 0.0001)
 }
-
-// too high: 17218
-
-// not right: 17217
-// not right: 17216
-// not right: 17210
-// not right: 17200
-
-// too low: 17000
