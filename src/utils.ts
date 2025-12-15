@@ -45,6 +45,12 @@ export function product(numbers: Iterable<number>) {
 /* grid functions */
 export type Coord = [number, number]
 export type Direction = 0 | 1 | 2 | 3
+export const directionsByName = {
+  right: 0,
+  down: 1,
+  left: 2,
+  up: 3
+} satisfies Record<string, Direction>
 export type DirectionName = '>' | 'v' | '<' | '^'
 export type Direction8 = Direction | 4 | 5 | 6 | 7
 
