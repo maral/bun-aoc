@@ -145,13 +145,21 @@ export function cloneMap<T>(map: T[][]) {
   return map.map(line => [...line])
 }
 
-export function printMap<T>(map: T[][], position?: Coord) {
+export function printMap<T>(
+  map: T[][],
+  position?: Coord,
+  mapper?: (position: Coord, field: T) => string
+) {
   process.stdout.write(
     map
       .map((line, y) =>
         line
           .map((char, x) =>
-            position && position[0] === x && position[1] === y ? '@' : char
+            position && position[0] === x && position[1] === y
+              ? '@'
+              : mapper
+                ? mapper([x, y], char)
+                : char
           )
           .join('')
       )
